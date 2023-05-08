@@ -6,21 +6,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Profile("!profile_discovery")
+@Profile("local_discovery")
 @Configuration
-public class LocalhostRouteConfig {
+public class LoadBalancedRoutes {
 
     @Bean
-    public RouteLocator localhostRoutes(RouteLocatorBuilder builder) {
+    public RouteLocator loadBalanced(RouteLocatorBuilder builder) {
         return builder.routes()
                       .route("beer-service", r -> r.path("/api/v1/beer*", "/api/v1/beer/*", "/api/v1/beerUpc/*")
-                                   .uri("http://localhost:8080"))
+                                                   .uri("lb://beer-service"))
                       .route("beer-order-service",
                               r -> r.path("/api/v1/customers/*/orders*", "/api/v1/customers/*/orders/*",
-                                      "/api/v1/customers/*/orders/*/pickup", "/api/v1/customers*", "/api/v1/customers/*")
-                                    .uri("http://localhost:8081"))
-                .route("inventory-service" ,r -> r.path("/api/v1/beer/*/inventory")
-                        .uri("http://localhost:8082"))
+                                      "/api/v1/customers/*/orders/*/pickup", "/api/v1/customers*",
+                                      "/api/v1/customers/*").uri("lb://beer-order-service"))
+                      .route("inventory-service",
+                              r -> r.path("/api/v1/beer/*/inventory").uri("lb://beer-inventory-service"))
                       .build();
     }
 }
