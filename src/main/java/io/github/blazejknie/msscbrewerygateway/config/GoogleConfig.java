@@ -13,12 +13,12 @@ public class GoogleConfig {
     @Bean
     public RouteLocator myGoogleConfig(RouteLocatorBuilder builder) {
         return builder.routes()
-                      .route("google",r -> r
-                              .path("/googlesearch1")
-                                      .filters(f -> f.rewritePath("/googlesearch1(?<segment>/?.*)", "/${segment}"))
-                              .uri("https://google.com/;")
-                              )
-                      .build();
+                .route("google", r -> r
+                        .path("/googlesearch1")
+                        .filters(f -> f.rewritePath("/googlesearch1(?<segment>/?.*)", "/${segment}"))
+                        .uri("https://google.com/;")
+                )
+                .build();
     }
 
 }
